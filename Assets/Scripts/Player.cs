@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D playerRb;
     BoxCollider2D boxCollider;
     private float playerHorDir;
+    bool canDoubleJump;
     [SerializeField] private float velocityX, velocityY;
     void Start()
     {
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
 
     void Running()
     {
-        playerRb.linearVelocityX = playerHorDir * velocityX * Time.deltaTime;
+        playerRb.linearVelocityX = playerHorDir * velocityX;
         
         bool isRunning = Mathf.Abs(playerRb.linearVelocityX) > 0;
         
@@ -41,7 +42,12 @@ public class Player : MonoBehaviour
     {
         if (value.isPressed && boxCollider.IsTouchingLayers(LayerMask.GetMask("Foreground")))
         {
-            playerRb.linearVelocityY = velocityY * Time.deltaTime;
+            playerRb.linearVelocityY = velocityY;
+            canDoubleJump = true;
+        }else if (canDoubleJump)
+        {
+            playerRb.linearVelocityY = velocityY;
+            canDoubleJump = false;
         }
     }
 }
