@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Monster
+  - Bullet
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -11,9 +14,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Background
   - Foreground
-  - Player
+  - Limit
+  - Monster
   - 
   - 
   - 
@@ -42,16 +45,16 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Background
-    uniqueID: 3107883681
-    locked: 0
-  - name: Monsters
-    uniqueID: 2450663573
-    locked: 0
-  - name: Player
-    uniqueID: 2718954967
+    uniqueID: 1623119647
     locked: 0
   - name: Foreground
-    uniqueID: 4030148241
+    uniqueID: 13659487
+    locked: 0
+  - name: Portal
+    uniqueID: 1701167567
+    locked: 0
+  - name: Player
+    uniqueID: 1492489629
     locked: 0
   m_RenderingLayers:
   - Default
