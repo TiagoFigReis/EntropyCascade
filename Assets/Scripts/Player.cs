@@ -9,9 +9,11 @@ public class Player : MonoBehaviour
     private BoxCollider2D boxCollider;
     private Animator anim;
     private SpriteRenderer _spriteRenderer;
+    private Animator HealtAnim;
+    private SpriteRenderer HealtSpriteRenderer;
     
-    private float playerHorDir, facingDirection = 1f, lastShot, life = 5, flashDuration = 0.1f;
-    int flashCount = 5;
+    private float playerHorDir, facingDirection = 1f, lastShot, flashDuration = 0.1f, cooldownHealth = 2f, lastHit;
+    private int flashCount = 5, life = 3;
     private bool canDoubleJump;
     
     [SerializeField] private float velocityX, cooldown, velocityY, shootVelocity;
@@ -19,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab; 
     [SerializeField] private Transform firePoint; 
     [SerializeField] private SpriteRenderer gunSprite;
+    [SerializeField] private Transform healthBar;
     
     void Start()
     {
@@ -26,12 +29,17 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         anim = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        
+        HealtAnim = healthBar.GetComponent<Animator>();
+        HealtSpriteRenderer = healthBar.GetComponent<SpriteRenderer>();
+        HealtSpriteRenderer.enabled = false;
     }
     
     void Update()
     {
         playerRb.linearVelocity = new Vector2(playerHorDir * velocityX, playerRb.linearVelocity.y);
         Flip();
+        HealthBarTime();
         UpdateAnimationState(); 
     }
 
@@ -49,6 +57,7 @@ public class Player : MonoBehaviour
         {
             facingDirection = Mathf.Sign(playerHorDir);
             transform.localScale = new Vector2(facingDirection, 1);
+            healthBar.localScale = new Vector2(0.6f * Math.Min(facingDirection, 1), 0.6f);
         }
     }
 
@@ -101,6 +110,11 @@ public class Player : MonoBehaviour
     void Damage()
     {
         life--;
+        
+        HealtAnim.SetInteger("HealthAnim", life);
+        HealtSpriteRenderer.enabled = true;
+
+        lastHit = Time.time;
 
         StartCoroutine(FlashSprite());
         
@@ -135,5 +149,12 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Monster")) Damage();
+    }
+
+    private void HealthBarTime()
+    {
+        if (lastHit + cooldownHealth > Time.time) return;
+        
+        HealtSpriteRenderer.enabled = false;
     }
 }
