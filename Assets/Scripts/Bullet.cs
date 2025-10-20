@@ -3,7 +3,15 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private Rigidbody2D rb;
+    public float damage = 1f;
+    public float critChance = 0f;
 
+    public void Init(float dmg, float crit)
+    {
+        damage = dmg;
+        critChance = crit;
+    }
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

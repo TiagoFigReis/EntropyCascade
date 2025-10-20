@@ -22,7 +22,7 @@ public class Portal : MonoBehaviour
         
         lastMonster = Time.time;
         
-        int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 10f);
+        int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 20f);
         float spawnRateMultiplier = Mathf.Pow(0.9f, intervals);
 
         float minCooldown = 6f * spawnRateMultiplier;

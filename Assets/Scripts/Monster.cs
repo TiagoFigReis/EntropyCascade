@@ -6,9 +6,12 @@ public class Monster : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private float direction;
-    public float life = 3;
+    public float life = 3f;
+    private bool isDead = false;
 
     [SerializeField] private float speed;
+    [SerializeField] private GameObject damageTextPrefab;
+    private Transform canvas;
 
     void Awake()
     {
@@ -18,14 +21,17 @@ public class Monster : MonoBehaviour
     }
     void Start()
     {
+        canvas = FindFirstObjectByType<Canvas>().transform;
         if (transform.position.x < 0) direction = 1;
         else direction = -1;
     }
 
     void Update()
     {
-        int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 10f);
-        float speedMultiplier = Mathf.Pow(1.05f, intervals);
+        if (isDead) return;
+        
+        int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 20f);
+        float speedMultiplier = Mathf.Pow(1.025f, intervals);
         float currentSpeed = speed * speedMultiplier;
 
         rb.linearVelocity = new Vector2(currentSpeed * direction, rb.linearVelocity.y);
@@ -41,16 +47,27 @@ public class Monster : MonoBehaviour
         }
     }
 
-    void Damage()
+    void Damage(float dmg, float critChance)
     {
-        life--;
+        if (isDead) return;
+        
+        bool isCritical = Random.value < critChance;
+        
+        float finalDamage = isCritical ? dmg * 2 : dmg;
+        
+        life -=  finalDamage;
 
+        GameObject dmgText = Instantiate(damageTextPrefab, transform.position + Vector3.up * 0.3f, Quaternion.identity, canvas); 
+        
+        dmgText.GetComponent<DamageText>().ShowDamage(finalDamage, isCritical);
+        
         if (life <= 0)
         {
             anim.SetBool("IsDead", true);
             rb.bodyType = RigidbodyType2D.Static;
-            // boxCollider.enabled = false;
             Destroy(gameObject,1.1f);
+
+            isDead = true;
         }
     }
 
@@ -63,7 +80,8 @@ public class Monster : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Bullet"))
         {
-            Damage();
+            Bullet bullet = other.GetComponent<Bullet>();
+            Damage(bullet.damage, bullet.critChance);
         }
     }
 

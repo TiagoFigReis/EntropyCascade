@@ -1,7 +1,19 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+enum UpgradeType
+{
+    Damage,
+    Speed,
+    BulletSpeed,
+    JumpHeight,
+    CritChance,
+    DoubleBullet
+}
+
 
 public class Player : MonoBehaviour
 {
@@ -11,10 +23,18 @@ public class Player : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private Animator HealtAnim;
     private SpriteRenderer HealtSpriteRenderer;
-    
-    private float playerHorDir, facingDirection = 1f, lastShot, flashDuration = 0.1f, cooldownHealth = 2f, lastHit;
-    private int flashCount = 5, life = 3;
-    private bool canDoubleJump;
+
+    private float playerHorDir,
+        facingDirection = 1f,
+        lastShot,
+        flashDuration = 0.1f,
+        cooldownHealth = 2f,
+        lastHit,
+        damage = 1f,
+        critChance = 0f;
+
+    private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, upgradeCount = 6;
+    private bool canDoubleJump, doubleBullet = false;
     
     [SerializeField] private float velocityX, cooldown, velocityY, shootVelocity;
     
@@ -22,6 +42,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform firePoint; 
     [SerializeField] private SpriteRenderer gunSprite;
     [SerializeField] private Transform healthBar;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private GameObject upgradeTextPrefab;
+    private Transform canvas;
     
     void Start()
     {
@@ -29,6 +52,7 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         anim = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        canvas = FindFirstObjectByType<Canvas>().transform;
         
         HealtAnim = healthBar.GetComponent<Animator>();
         HealtSpriteRenderer = healthBar.GetComponent<SpriteRenderer>();
@@ -100,10 +124,27 @@ public class Player : MonoBehaviour
         {
             bulletRotation = Quaternion.Euler(0, 180, -90);
         }
-        
+
         GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
         Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
         
+        bulletInstance.Init(damage, critChance);
+        bulletInstance.Shoot(facingDirection, shootVelocity);
+        
+        float delay = doubleBullet ? 0.1f : 0f;
+
+        if (delay == 0) return;
+        
+        StartCoroutine(ShootWithDelay(delay, bulletRotation));
+    }
+    IEnumerator ShootWithDelay(float delay, Quaternion bulletRotation)
+    {
+        yield return new WaitForSeconds(delay);
+
+        GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
+        
+        bulletInstance.Init(damage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
     }
 
@@ -140,8 +181,13 @@ public class Player : MonoBehaviour
         if (!other.gameObject.CompareTag("Coin")) return;
 
         CoinSpawner spawner = FindFirstObjectByType<CoinSpawner>();
+
+        coinCounter++;
+        scoreText.text = coinCounter.ToString();
         
         spawner.Notify();
+
+        if (coinCounter % coinUpgradeCount == 0) Upgrade();
 
         Destroy(other.gameObject);
     }
@@ -156,5 +202,45 @@ public class Player : MonoBehaviour
         if (lastHit + cooldownHealth > Time.time) return;
         
         HealtSpriteRenderer.enabled = false;
+    }
+
+    private void Upgrade()
+    {
+        UpgradeType upgradeSelected = (UpgradeType)UnityEngine.Random.Range(0, upgradeCount);
+
+        string upgrade = "";
+        
+        switch (upgradeSelected)
+        {
+            case UpgradeType.Damage:
+                damage *= 1.2f;
+                upgrade = "+1.2x dmg";
+                break;
+            case UpgradeType.Speed:
+                velocityX *= 1.1f;
+                upgrade = "+1.2x Speed";
+                break;
+            case UpgradeType.BulletSpeed:
+                cooldown *= 0.9f;
+                upgrade = "+1.1x Fire Rate";
+                break;
+            case UpgradeType.JumpHeight:
+                velocityY *= 1.1f;
+                upgrade = "+1.1x JumpHeight";
+                break;
+            case UpgradeType.CritChance:
+                critChance += 0.1f;
+                upgrade = "+10% Crit Chance";
+                break;
+            case UpgradeType.DoubleBullet:
+                doubleBullet = true;
+                upgradeCount--;
+                upgrade = "Double Bullet";
+                break;
+        }   
+        
+        GameObject dmgText = Instantiate(upgradeTextPrefab, transform.position + Vector3.up * 0.3f, Quaternion.identity, canvas); 
+        
+        dmgText.GetComponent<DamageText>().ShowUpgrade(upgrade);
     }
 }

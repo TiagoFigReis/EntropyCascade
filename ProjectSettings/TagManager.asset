@@ -56,5 +56,8 @@ TagManager:
   - name: Player
     uniqueID: 1492489629
     locked: 0
+  - name: Canva
+    uniqueID: 2693849887
+    locked: 0
   m_RenderingLayers:
   - Default

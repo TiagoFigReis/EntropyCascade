@@ -1859,7 +1859,6 @@ MonoBehaviour:
   gunSprite: {fileID: 1028219157}
   healthBar: {fileID: 1855953726}
   scoreText: {fileID: 1701301656}
-  upgradeTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
 --- !u!61 &561304853
 BoxCollider2D:
   m_ObjectHideFlags: 0
