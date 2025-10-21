@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
 
     private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, upgradeCount = 6;
     private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false;
+
+    public static int enemieCounter = 0;
     
     [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY, shootVelocity;
     
@@ -48,6 +50,7 @@ public class Player : MonoBehaviour
     [SerializeField] private BoxCollider2D groundCheck;
     [SerializeField] private LayerMask groundLayer;
     private Transform canvas;
+    private GameOver gameOver;
     
     void Start()
     {
@@ -56,6 +59,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         canvas = FindFirstObjectByType<Canvas>().transform;
+        gameOver = FindFirstObjectByType<GameOver>();
         
         HealtAnim = healthBar.GetComponent<Animator>();
         HealtSpriteRenderer = healthBar.GetComponent<SpriteRenderer>();
@@ -163,8 +167,11 @@ public class Player : MonoBehaviour
         lastHit = Time.time;
 
         StartCoroutine(FlashSprite());
-        
-        if (life <= 0) Destroy(gameObject);
+
+        if (life <= 0)
+        {
+            gameOver.GameOverMenu(coinCounter, enemieCounter);
+        }
     }
     
     private IEnumerator FlashSprite()
