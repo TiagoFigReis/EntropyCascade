@@ -6,10 +6,10 @@ using UnityEngine.InputSystem;
 
 enum UpgradeType
 {
+    DoubleJump,
     Damage,
     Speed,
     BulletSpeed,
-    JumpHeight,
     CritChance,
     DoubleBullet
 }
@@ -30,13 +30,14 @@ public class Player : MonoBehaviour
         flashDuration = 0.1f,
         cooldownHealth = 2f,
         lastHit,
+        invulnerableTime = 1.0f,
         damage = 1f,
         critChance = 0f;
 
     private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, upgradeCount = 6;
-    private bool canDoubleJump, doubleBullet = false;
+    private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false;
     
-    [SerializeField] private float velocityX, cooldown, velocityY, shootVelocity;
+    [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY, shootVelocity;
     
     [SerializeField] private GameObject bulletPrefab; 
     [SerializeField] private Transform firePoint; 
@@ -44,6 +45,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform healthBar;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject upgradeTextPrefab;
+    [SerializeField] private BoxCollider2D groundCheck;
+    [SerializeField] private LayerMask groundLayer;
     private Transform canvas;
     
     void Start()
@@ -69,7 +72,7 @@ public class Player : MonoBehaviour
 
     void UpdateAnimationState()
     {
-        bool isGrounded = boxCollider.IsTouchingLayers(LayerMask.GetMask("Foreground"));
+        bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground"));
         
         anim.SetBool("IsRunning", playerHorDir != 0 && isGrounded);
         anim.SetBool("IsJumping", !isGrounded);
@@ -92,17 +95,19 @@ public class Player : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        bool isGrounded = boxCollider.IsTouchingLayers(LayerMask.GetMask("Foreground"));
+        bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground"));
+        print(isGrounded);
 
         if (value.isPressed && isGrounded)
         {
+            print("salve");
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY);
             canDoubleJump = true;
         } 
-        else if (value.isPressed && canDoubleJump) 
+        else if (value.isPressed && canDoubleJump && doubleJumpUpgraded) 
         {
             anim.SetTrigger("JumpTrigger");
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY);
+            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, doubleJumpVelocityY);
             canDoubleJump = false;
         }
     }
@@ -194,6 +199,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (lastHit + invulnerableTime > Time.time) return;
+        
         if (other.gameObject.CompareTag("Monster")) Damage();
     }
 
@@ -206,27 +213,28 @@ public class Player : MonoBehaviour
 
     private void Upgrade()
     {
-        UpgradeType upgradeSelected = (UpgradeType)UnityEngine.Random.Range(0, upgradeCount);
+        int min = doubleJumpUpgraded ? 1 : 0;
+        UpgradeType upgradeSelected = (UpgradeType)UnityEngine.Random.Range(min, upgradeCount);
 
         string upgrade = "";
         
         switch (upgradeSelected)
         {
+            case UpgradeType.DoubleJump:
+                doubleJumpUpgraded = true;
+                upgrade = "Double Jump";
+                break;
             case UpgradeType.Damage:
-                damage *= 1.2f;
-                upgrade = "+1.2x dmg";
+                damage *= 1.25f;
+                upgrade = "+25% dmg";
                 break;
             case UpgradeType.Speed:
-                velocityX *= 1.1f;
-                upgrade = "+1.2x Speed";
+                velocityX *= 1.05f;
+                upgrade = "+5% Speed";
                 break;
             case UpgradeType.BulletSpeed:
                 cooldown *= 0.9f;
-                upgrade = "+1.1x Fire Rate";
-                break;
-            case UpgradeType.JumpHeight:
-                velocityY *= 1.1f;
-                upgrade = "+1.1x JumpHeight";
+                upgrade = "+10% Fire Rate";
                 break;
             case UpgradeType.CritChance:
                 critChance += 0.1f;

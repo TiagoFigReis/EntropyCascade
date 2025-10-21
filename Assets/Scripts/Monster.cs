@@ -24,6 +24,9 @@ public class Monster : MonoBehaviour
         canvas = FindFirstObjectByType<Canvas>().transform;
         if (transform.position.x < 0) direction = 1;
         else direction = -1;
+        
+        int timePassed = Mathf.FloorToInt(Time.timeSinceLevelLoad / 30f);
+        life *= Mathf.Pow(1.1f, timePassed);
     }
 
     void Update()
@@ -33,6 +36,8 @@ public class Monster : MonoBehaviour
         int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 20f);
         float speedMultiplier = Mathf.Pow(1.025f, intervals);
         float currentSpeed = speed * speedMultiplier;
+        
+        
 
         rb.linearVelocity = new Vector2(currentSpeed * direction, rb.linearVelocity.y);
     }

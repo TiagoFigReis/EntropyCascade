@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   life: 3
-  speed: 2
+  speed: 1.2
   damageTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
 --- !u!50 &-1843395366856721798
 Rigidbody2D:
