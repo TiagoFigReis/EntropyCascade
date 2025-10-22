@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,6 +13,7 @@ enum UpgradeType
     Speed,
     BulletSpeed,
     CritChance,
+    LifePoint,
     DoubleBullet
 }
 
@@ -34,10 +37,12 @@ public class Player : MonoBehaviour
         damage = 1f,
         critChance = 0f;
 
-    private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, upgradeCount = 6;
+    private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5;
     private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false;
 
     public static int enemieCounter = 0;
+    
+    private List<UpgradeType> used = new List<UpgradeType>();
     
     [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY, shootVelocity;
     
@@ -207,7 +212,7 @@ public class Player : MonoBehaviour
     {
         if (lastHit + invulnerableTime > Time.time) return;
         
-        if (other.gameObject.CompareTag("Monster")) Damage();
+        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw")) Damage();
     }
 
     private void HealthBarTime()
@@ -219,14 +224,24 @@ public class Player : MonoBehaviour
 
     private void Upgrade()
     {
-        int min = doubleJumpUpgraded ? 1 : 0;
-        UpgradeType upgradeSelected = (UpgradeType)UnityEngine.Random.Range(min, upgradeCount);
+        if (life == 3 && !used.Contains(UpgradeType.LifePoint))
+        {
+            used.Add(UpgradeType.LifePoint);
+        }
+        
+        if (life < 3 && used.Contains(UpgradeType.LifePoint))
+        {
+            used.Remove(UpgradeType.LifePoint);
+        }
+        
+        UpgradeType upgradeSelected = GetRandomEnumValue<UpgradeType>(used);
 
         string upgrade = "";
         
         switch (upgradeSelected)
         {
             case UpgradeType.DoubleJump:
+                used.Add(UpgradeType.DoubleJump);
                 doubleJumpUpgraded = true;
                 upgrade = "Double Jump";
                 break;
@@ -246,9 +261,13 @@ public class Player : MonoBehaviour
                 critChance += 0.1f;
                 upgrade = "+10% Crit Chance";
                 break;
+            case UpgradeType.LifePoint:
+                life++;
+                upgrade = "+1 Life Point";
+                break;
             case UpgradeType.DoubleBullet:
+                used.Add(UpgradeType.DoubleBullet);
                 doubleBullet = true;
-                upgradeCount--;
                 upgrade = "Double Bullet";
                 break;
         }   
@@ -256,5 +275,19 @@ public class Player : MonoBehaviour
         GameObject dmgText = Instantiate(upgradeTextPrefab, transform.position + Vector3.up * 0.3f, Quaternion.identity, canvas); 
         
         dmgText.GetComponent<DamageText>().ShowUpgrade(upgrade);
+    }
+    
+    private T GetRandomEnumValue<T>(List<T> used = null)
+    {
+        List<T> valores = Enum.GetValues(typeof(T)).Cast<T>().ToList();
+        
+        if (used != null && used.Count > 0)
+            valores = valores.Except(used).ToList();
+        
+        if (valores.Count == 0)
+            return default;
+        
+        int index = UnityEngine.Random.Range(0, valores.Count);
+        return valores[index];
     }
 }

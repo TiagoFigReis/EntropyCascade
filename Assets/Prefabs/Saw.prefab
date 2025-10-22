@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6310037662773350166}
   - component: {fileID: 5553597286149831961}
   - component: {fileID: 5750613573074545279}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
-  m_TagString: Untagged
+  m_TagString: Saw
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,9 +184,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6740141479845919698}
   - component: {fileID: 1481834990993975737}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Saw
-  m_TagString: Untagged
+  m_TagString: Saw
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

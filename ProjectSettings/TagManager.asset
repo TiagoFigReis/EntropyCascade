@@ -7,6 +7,8 @@ TagManager:
   - Monster
   - Bullet
   - Coin
+  - Saw
+  - JumpCollider
   layers:
   - Default
   - TransparentFX
@@ -17,9 +19,9 @@ TagManager:
   - Foreground
   - Limit
   - Monster
-  - 
-  - 
-  - 
+  - Saw
+  - JumpCollider
+  - Coin
   - 
   - 
   - 
