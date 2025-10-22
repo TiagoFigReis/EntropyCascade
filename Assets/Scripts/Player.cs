@@ -99,12 +99,10 @@ public class Player : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground"));
-        print(isGrounded);
+        bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground")) || groundCheck.IsTouchingLayers(LayerMask.GetMask("Monster"));
 
         if (value.isPressed && isGrounded)
         {
-            print("salve");
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY);
             canDoubleJump = true;
         } 
@@ -171,6 +169,7 @@ public class Player : MonoBehaviour
         if (life <= 0)
         {
             gameOver.GameOverMenu(coinCounter, enemieCounter);
+            enemieCounter = 0;
         }
     }
     
