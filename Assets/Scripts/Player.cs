@@ -21,7 +21,6 @@ enum UpgradeType
 public class Player : MonoBehaviour
 {
     private Rigidbody2D playerRb;
-    private BoxCollider2D boxCollider;
     private Animator anim;
     private SpriteRenderer _spriteRenderer;
     private Animator HealtAnim;
@@ -54,17 +53,24 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject upgradeTextPrefab;
     [SerializeField] private BoxCollider2D groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private AudioClip pistolSound, jumpSound; 
+    
+    private AudioSource audioSource;
     private Transform canvas;
     private GameOver gameOver;
     
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
         anim = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         canvas = FindFirstObjectByType<Canvas>().transform;
         gameOver = FindFirstObjectByType<GameOver>();
+        
+        audioSource = GetComponent<AudioSource>();
+        
+        audioSource.volume = 0.015f;
+        audioSource.clip = jumpSound;
         
         HealtAnim = healthBar.GetComponent<Animator>();
         HealtSpriteRenderer = healthBar.GetComponent<SpriteRenderer>();
@@ -108,13 +114,15 @@ public class Player : MonoBehaviour
 
         if (value.isPressed && isGrounded)
         {
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY);
+            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY); 
+            audioSource.Play();
             canDoubleJump = true;
         } 
         else if (value.isPressed && canDoubleJump && doubleJumpUpgraded) 
         {
             anim.SetTrigger("JumpTrigger");
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, doubleJumpVelocityY);
+            audioSource.Play();
             canDoubleJump = false;
         }
     }
@@ -143,6 +151,8 @@ public class Player : MonoBehaviour
         bulletInstance.Init(damage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
         
+        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
+        
         float delay = doubleBullet ? 0.1f : 0f;
 
         if (delay == 0) return;
@@ -158,6 +168,8 @@ public class Player : MonoBehaviour
         
         bulletInstance.Init(damage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
+        
+        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
     }
 
     void Damage()

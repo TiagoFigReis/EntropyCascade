@@ -3,8 +3,10 @@ using UnityEngine;
 public class Saw : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private AudioClip sound;
 
     private Animator animator;
+    private AudioSource audioSource;
     private Vector2 targetPosition;
     private bool isMoving = false;
     private Transform parentTransform;
@@ -14,6 +16,10 @@ public class Saw : MonoBehaviour
         animator = GetComponent<Animator>();
         
         parentTransform = transform.parent;
+
+        audioSource = GetComponentInParent<AudioSource>();
+        audioSource.clip = sound;
+        audioSource.volume = 0.01f;
     }
     
     public void Initialize(Vector2 target)
@@ -42,6 +48,9 @@ public class Saw : MonoBehaviour
     public void OnEmergeComplete()
     {
         animator.Play("SawIdle"); 
+        
+        if (!audioSource.isPlaying)
+            audioSource.Play();
         
         isMoving = true;
     }

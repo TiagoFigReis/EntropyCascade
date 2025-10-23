@@ -81,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1492489629
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: -1566199911008027906, guid: 2b08afad614532e4fbeae7d13524e095, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -177,6 +177,7 @@ MonoBehaviour:
   life: 3
   speed: 1.3
   damageTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
+  deathSound: {fileID: 8300000, guid: 7f9552cd22d681449a066a89a4b953c6, type: 3}
 --- !u!50 &-1843395366856721798
 Rigidbody2D:
   serializedVersion: 5

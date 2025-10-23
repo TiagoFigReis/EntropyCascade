@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [System.Serializable]
 public class SawPath
@@ -10,7 +11,7 @@ public class SawPath
 
 public class SawSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject sawPrefab;
+    [SerializeField] private GameObject sawPrefab, warningPrefab;
     [SerializeField] private SawPath[] sawPaths;
 
     [SerializeField] private float minSpawnTime = 5f;
@@ -48,9 +49,21 @@ public class SawSpawner : MonoBehaviour
         int index = Random.Range(0, sawPaths.Length);
         SawPath selectedPath = sawPaths[index];
         
-        Vector2 spawnPos = new Vector2(selectedPath.xInitial, selectedPath.y);
-        Vector2 targetPos = new Vector2(selectedPath.xFinal, selectedPath.y);
+        StartCoroutine(SpawnSequence(selectedPath));
+    }
+
+    private IEnumerator SpawnSequence(SawPath path)
+    {
+        Vector2 spawnPos = new Vector2(path.xInitial, path.y);
+        Vector2 targetPos = new Vector2(path.xFinal, path.y);
         
+        Vector2 warningPos = new Vector2(path.xInitial, path.y + 0.2f);
+        
+        GameObject warningInstance = Instantiate(warningPrefab, warningPos, Quaternion.identity);
+        
+        Destroy(warningInstance, 0.8f);
+        
+        yield return new WaitForSeconds(2f);
         
         GameObject sawInstance = Instantiate(sawPrefab, spawnPos, Quaternion.identity);
         

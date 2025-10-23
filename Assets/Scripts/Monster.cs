@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
@@ -11,6 +12,7 @@ public class Monster : MonoBehaviour
 
     [SerializeField] private float speed;
     [SerializeField] private GameObject damageTextPrefab;
+    [SerializeField] private AudioClip deathSound;
     private Transform canvas;
 
     void Awake()
@@ -70,10 +72,17 @@ public class Monster : MonoBehaviour
         {
             anim.SetBool("IsDead", true);
             rb.bodyType = RigidbodyType2D.Static;
+            StartCoroutine(PlayDeathSoundDelayed(0.35f));
             Destroy(gameObject,1.1f);
             Player.enemieCounter++;
             isDead = true;
         }
+    }
+    
+    private IEnumerator PlayDeathSoundDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        AudioSource.PlayClipAtPoint(deathSound, transform.position);
     }
 
     void Flip()
