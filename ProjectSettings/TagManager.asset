@@ -9,6 +9,7 @@ TagManager:
   - Coin
   - Saw
   - JumpCollider
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Saw
   - JumpCollider
   - Coin
-  - 
+  - Acid
   - 
   - 
   - 
@@ -52,14 +53,17 @@ TagManager:
   - name: Trap
     uniqueID: 2173202435
     locked: 0
-  - name: Foreground
-    uniqueID: 13659487
-    locked: 0
   - name: Portal
     uniqueID: 1701167567
     locked: 0
   - name: Player
     uniqueID: 1492489629
+    locked: 0
+  - name: Water
+    uniqueID: 2512475545
+    locked: 0
+  - name: Foreground
+    uniqueID: 13659487
     locked: 0
   - name: Canva
     uniqueID: 2693849887

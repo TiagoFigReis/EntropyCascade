@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private Animator HealtAnim;
     private SpriteRenderer HealtSpriteRenderer;
+    private BoxCollider2D boxCollider;
 
     private float playerHorDir,
         facingDirection = 1f,
@@ -66,6 +67,7 @@ public class Player : MonoBehaviour
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         canvas = FindFirstObjectByType<Canvas>().transform;
         gameOver = FindFirstObjectByType<GameOver>();
+        boxCollider = GetComponent<BoxCollider2D>();
         
         audioSource = GetComponent<AudioSource>();
         
@@ -206,6 +208,13 @@ public class Player : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (boxCollider.IsTouchingLayers(LayerMask.GetMask("Acid")))
+        {
+            print("Aoba");
+            StartCoroutine(WaterDeath());
+            return;
+        }
+        
         if (!other.gameObject.CompareTag("Coin")) return;
 
         CoinSpawner spawner = FindFirstObjectByType<CoinSpawner>();
@@ -220,11 +229,21 @@ public class Player : MonoBehaviour
         Destroy(other.gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
         if (lastHit + invulnerableTime > Time.time) return;
-        
-        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw")) Damage();
+
+        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw"))
+        {
+            Damage();
+        }
+    }
+    
+    private IEnumerator WaterDeath()
+    {
+        yield return new WaitForSeconds(0.2f); 
+        gameOver.GameOverMenu(coinCounter, enemieCounter);
+        enemieCounter = 0;
     }
 
     private void HealthBarTime()
