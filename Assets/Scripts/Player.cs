@@ -37,24 +37,26 @@ public class Player : MonoBehaviour
         damage = 1f,
         critChance = 0f;
 
-    private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5;
+    private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, index;
     private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false;
 
     public static int enemieCounter = 0;
     
     private List<UpgradeType> used = new List<UpgradeType>();
     
-    [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY, shootVelocity;
+    [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY;
     
     [SerializeField] private GameObject bulletPrefab; 
-    [SerializeField] private Transform firePoint; 
+    [SerializeField] private Transform firePoint, healthBar, WeaponPosition; 
     [SerializeField] private SpriteRenderer gunSprite;
-    [SerializeField] private Transform healthBar;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject upgradeTextPrefab;
     [SerializeField] private BoxCollider2D groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private AudioClip pistolSound, jumpSound; 
+    [SerializeField] private AudioClip pistolSound, jumpSound;
+    [SerializeField] private List<Weapon> gunList;
+    
+    private Weapon gun;
     
     private AudioSource audioSource;
     private Transform canvas;
@@ -77,6 +79,14 @@ public class Player : MonoBehaviour
         HealtAnim = healthBar.GetComponent<Animator>();
         HealtSpriteRenderer = healthBar.GetComponent<SpriteRenderer>();
         HealtSpriteRenderer.enabled = false;
+
+        index = UnityEngine.Random.Range(0, gunList.Count);
+        
+        gun = Instantiate(gunList[index], WeaponPosition.transform.position, gunList[index].transform.rotation);
+        
+        gunSprite = gun.GetComponent<SpriteRenderer>();
+        
+        gun.transform.SetParent(transform);
     }
     
     void Update()
@@ -146,32 +156,8 @@ public class Player : MonoBehaviour
         {
             bulletRotation = Quaternion.Euler(0, 180, -90);
         }
-
-        GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
         
-        bulletInstance.Init(damage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
-        
-        float delay = doubleBullet ? 0.1f : 0f;
-
-        if (delay == 0) return;
-        
-        StartCoroutine(ShootWithDelay(delay, bulletRotation));
-    }
-    IEnumerator ShootWithDelay(float delay, Quaternion bulletRotation)
-    {
-        yield return new WaitForSeconds(delay);
-
-        GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
-        
-        bulletInstance.Init(damage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
+        gun.shoot(bulletRotation, damage, critChance, facingDirection, doubleBullet);
     }
 
     void Damage()
@@ -210,7 +196,6 @@ public class Player : MonoBehaviour
     {
         if (boxCollider.IsTouchingLayers(LayerMask.GetMask("Acid")))
         {
-            print("Aoba");
             StartCoroutine(WaterDeath());
             return;
         }
@@ -306,6 +291,31 @@ public class Player : MonoBehaviour
         GameObject dmgText = Instantiate(upgradeTextPrefab, transform.position + Vector3.up * 0.3f, Quaternion.identity, canvas); 
         
         dmgText.GetComponent<DamageText>().ShowUpgrade(upgrade);
+        
+        int newIndex = UnityEngine.Random.Range(0, gunList.Count);
+
+        while (newIndex == index)
+        {
+            newIndex = UnityEngine.Random.Range(0, gunList.Count);
+        }
+
+        index = newIndex;
+        
+        Destroy(gun.gameObject);
+        
+        gun = Instantiate(gunList[index], WeaponPosition.transform.position, gunList[index].transform.rotation);
+        gun.transform.SetParent(transform);
+        
+        if (facingDirection > 0f)
+        {
+            gun.transform.localScale = new Vector3(3, 3, 1);
+        }
+        else
+        {
+            gun.transform.localScale = new Vector3(-3, 3, 1);
+        }
+        
+        gunSprite = gun.GetComponent<SpriteRenderer>();
     }
     
     private T GetRandomEnumValue<T>(List<T> used = null)
