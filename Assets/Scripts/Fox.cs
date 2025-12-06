@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Fox : MonoBehaviour
 {
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb;
@@ -73,9 +73,8 @@ public class Monster : MonoBehaviour
         
         if (life <= 0)
         {
-            anim.SetBool("IsDead", true);
-            rb.bodyType = RigidbodyType2D.Static;
-            gameObject.layer = LayerMask.NameToLayer("Explosion");
+            anim.SetBool("isDead", true);
+            gameObject.layer = LayerMask.NameToLayer("FoxDeath");
             StartCoroutine(PlayDeathSoundDelayed(0.35f));
             Destroy(gameObject,1.1f);
             Player.enemieCounter++;
@@ -91,6 +90,7 @@ public class Monster : MonoBehaviour
 
     void Flip()
     {
+        print("Vou flipar ein");
         direction *= -1;
     }
 
@@ -106,7 +106,7 @@ public class Monster : MonoBehaviour
     private IEnumerator acidDeath()
     {
         yield return new WaitForSeconds(0.05f);
-        anim.SetBool("IsDead", true);
+        anim.SetBool("isDead", true);
         rb.bodyType = RigidbodyType2D.Static;
         StartCoroutine(PlayDeathSoundDelayed(0.35f));
         Destroy(gameObject,1.1f);

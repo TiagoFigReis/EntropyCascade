@@ -128,3 +128,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Portal
   monsters:
   - {fileID: 7253322095127250567, guid: e1356cdcf03da2149bc8f2c1f54b9143, type: 3}
+  - {fileID: 7253322095127250567, guid: 528f29719bb802b46bde4fdd0258c5af, type: 3}

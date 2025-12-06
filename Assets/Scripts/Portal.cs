@@ -42,9 +42,18 @@ public class Portal : MonoBehaviour
         cooldown = Random.Range(minCooldown, maxCooldown);
         
         int monster = Random.Range(0, monsters.Count);
+        print(monster);
         
         GameObject monsterInstance = Instantiate(monsters[monster], transform.position, Quaternion.identity);
-        Monster monsterInstanceGj = monsterInstance.GetComponent<Monster>();
-        monsterInstanceGj.Init(direction);
+        if (monster == 0)
+        {
+            Monster monsterInstanceGj = monsterInstance.GetComponent<Monster>();
+            monsterInstanceGj.Init(direction);
+            return;
+        }
+        
+        Fox FoxInstance = monsterInstance.GetComponent<Fox>();
+        FoxInstance.Init(direction);
+        
     }
 }

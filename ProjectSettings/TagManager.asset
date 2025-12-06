@@ -24,10 +24,10 @@ TagManager:
   - JumpCollider
   - Coin
   - Acid
-  - 
-  - 
-  - 
-  - 
+  - Explosion
+  - Bullet
+  - FoxDeath
+  - Player
   - 
   - 
   - 

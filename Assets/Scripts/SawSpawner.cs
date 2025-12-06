@@ -1,12 +1,13 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class SawPath
+public struct SawPath
 {
-    public float xInitial;
-    public float xFinal;
-    public float y;
+    public Transform start;
+    public Transform end;
 }
 
 public class SawSpawner : MonoBehaviour
@@ -51,13 +52,13 @@ public class SawSpawner : MonoBehaviour
         
         StartCoroutine(SpawnSequence(selectedPath));
     }
-
+    
     private IEnumerator SpawnSequence(SawPath path)
     {
-        Vector2 spawnPos = new Vector2(path.xInitial, path.y);
-        Vector2 targetPos = new Vector2(path.xFinal, path.y);
+        Vector2 spawnPos = new Vector2(path.start.position.x, path.start.position.y);
+        Vector2 targetPos = new Vector2(path.end.position.x, path.end.position.y);
         
-        Vector2 warningPos = new Vector2(path.xInitial, path.y + 0.2f);
+        Vector2 warningPos = new Vector2(path.start.position.x, path.start.position.y + 0.2f);
         
         GameObject warningInstance = Instantiate(warningPrefab, warningPos, Quaternion.identity);
         

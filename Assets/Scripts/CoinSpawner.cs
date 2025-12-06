@@ -3,18 +3,9 @@ using UnityEngine;
 
 public class CoinSpawner : MonoBehaviour
 {
-    
-    [System.Serializable]
-    private class SpawnPoints
-    {
-        public float xI;
-        public float xF;
-        public float y;
-    }
-    
     [SerializeField] private GameObject coin ;
     
-    [SerializeField] private List<SpawnPoints> spawnPoints;
+    [SerializeField] private List<Transform> spawnPoints;
     
     private GameObject currentCoin;
     
@@ -29,9 +20,9 @@ public class CoinSpawner : MonoBehaviour
         
         int position = Random.Range(0, spawnPoints.Count);
         
-        float x = Random.Range(spawnPoints[position].xI, spawnPoints[position].xF);
+        Transform coinPosition = spawnPoints[position];
         
-        Vector3 spawnPoint = new Vector3 (x,spawnPoints[position].y, 0);
+        Vector3 spawnPoint = new Vector3 (coinPosition.position.x ,coinPosition.position.y, 0);
         
         currentCoin = Instantiate(coin, spawnPoint, Quaternion.identity);
     }
