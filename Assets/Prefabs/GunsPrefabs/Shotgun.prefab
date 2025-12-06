@@ -105,9 +105,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shotgun
   bulletPrefab: {fileID: 6146841730052981271, guid: 3b361232d27af25488844cfb90d4a4b2, type: 3}
-  pistolSound: {fileID: 8300000, guid: 8a2db94c32e4250459816d05ca617a2f, type: 3}
+  sound: {fileID: 8300000, guid: 8a2db94c32e4250459816d05ca617a2f, type: 3}
   damage: 2
   shootVelocity: 40
+  cooldown: 0.5
 --- !u!1 &6202089455865643035
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 6202089455865643035}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.38, y: 0.02, z: 0}
+  m_LocalPosition: {x: 0.53, y: 0.02, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

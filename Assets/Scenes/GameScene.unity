@@ -17029,7 +17029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityX: 7
-  cooldown: 0.25
+  cooldown: 1
   velocityY: 20
   doubleJumpVelocityY: 15
   bulletPrefab: {fileID: 6146841730052981271, guid: 3b361232d27af25488844cfb90d4a4b2, type: 3}
@@ -17048,6 +17048,7 @@ MonoBehaviour:
   gunList:
   - {fileID: 8075398267582266133, guid: 5203c0eb42ff6a54e82685520dbf7d6a, type: 3}
   - {fileID: 1851645523272591027, guid: 70154fce276ad4449bfdda7e69de6fc4, type: 3}
+  - {fileID: 2079556652005776586, guid: d9055d08d55edc44c855b384d31b32a6, type: 3}
 --- !u!61 &561304853
 BoxCollider2D:
   m_ObjectHideFlags: 0

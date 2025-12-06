@@ -1,14 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
-public class Shotgun : Weapon
+public class P90 : Weapon
 {
-    
     public override void shoot(Quaternion bulletRotation, float damagePorcentange, float critChance,
         float facingDirection, bool doubleBullet)
     {
@@ -19,8 +13,6 @@ public class Shotgun : Weapon
         
         bulletInstance.Init(finalDamage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        Destroy(bulletInstance, 0.02f);
         
         AudioSource.PlayClipAtPoint(sound, transform.position);
         
@@ -42,8 +34,6 @@ public class Shotgun : Weapon
         
         bulletInstance.Init(finalDamage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        Destroy(bulletInstance, 0.02f);
         
         AudioSource.PlayClipAtPoint(sound, transform.position);
     }

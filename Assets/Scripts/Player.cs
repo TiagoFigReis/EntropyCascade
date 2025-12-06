@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
         critChance = 0f;
 
     private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, index;
-    private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false;
+    private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false, isShooting;
 
     public static int enemieCounter = 0;
     
@@ -95,6 +95,7 @@ public class Player : MonoBehaviour
         Flip();
         HealthBarTime();
         UpdateAnimationState(); 
+        Shoot();
     }
 
     void UpdateAnimationState()
@@ -141,8 +142,18 @@ public class Player : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
+        if (value.isPressed)
+        {
+            isShooting = true;
+            return;
+        }
 
-        if (lastShot + cooldown > Time.time) return;
+        isShooting = false;
+    }
+
+    void Shoot()
+    {
+        if (lastShot + gun.cooldown * cooldown > Time.time || !isShooting) return;
         
         lastShot = Time.time;
         
@@ -250,7 +261,7 @@ public class Player : MonoBehaviour
             used.Remove(UpgradeType.LifePoint);
         }
         
-        UpgradeType upgradeSelected = GetRandomEnumValue<UpgradeType>(used);
+        UpgradeType upgradeSelected = GetRandomEnumValue(used);
 
         string upgrade = "";
         
@@ -306,14 +317,7 @@ public class Player : MonoBehaviour
         gun = Instantiate(gunList[index], WeaponPosition.transform.position, gunList[index].transform.rotation);
         gun.transform.SetParent(transform);
         
-        if (facingDirection > 0f)
-        {
-            gun.transform.localScale = new Vector3(3, 3, 1);
-        }
-        else
-        {
-            gun.transform.localScale = new Vector3(-3, 3, 1);
-        }
+        gun.transform.localScale = new Vector3(3, 3, 1);
         
         gunSprite = gun.GetComponent<SpriteRenderer>();
     }

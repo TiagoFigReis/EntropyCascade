@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8547446209488571340}
   - component: {fileID: 4696692373865167483}
-  - component: {fileID: 8075398267582266133}
+  - component: {fileID: 2079556652005776586}
   m_Layer: 0
-  m_Name: Gun
+  m_Name: p90
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 1492489629
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: -8000686527029885347, guid: 158c0240c5fac8743bb710066c2204fc, type: 3}
+  m_Sprite: {fileID: -9180320941165475899, guid: 375e16ee0c64aec49a3fa36daf3d8c7b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,7 +92,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8075398267582266133
+--- !u!114 &2079556652005776586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,14 +101,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1561380562211400416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b7706f955bc69f49a707436cf5fad38, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cb183374521aed4c982bf23d0b51fa9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::P90
   bulletPrefab: {fileID: 6146841730052981271, guid: 3b361232d27af25488844cfb90d4a4b2, type: 3}
   sound: {fileID: 8300000, guid: 8a2db94c32e4250459816d05ca617a2f, type: 3}
-  damage: 1
-  shootVelocity: 20
-  cooldown: 0.25
+  damage: 0.5
+  shootVelocity: 50
+  cooldown: 0.15
 --- !u!1 &6202089455865643035
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +121,7 @@ GameObject:
   m_Layer: 0
   m_Name: Shoot
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 6202089455865643035}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.29, y: 0.02, z: 0}
+  m_LocalPosition: {x: 0.56, y: 0.02, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

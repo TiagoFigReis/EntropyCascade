@@ -5,8 +5,9 @@ public abstract class Weapon : MonoBehaviour
 {
     protected Transform firePoint;
     [SerializeField] protected GameObject bulletPrefab;
-    [SerializeField] protected AudioClip pistolSound;
+    [SerializeField] protected AudioClip sound;
     [SerializeField] protected float damage, shootVelocity;
+    public float cooldown;
 
     private void Start()
     {

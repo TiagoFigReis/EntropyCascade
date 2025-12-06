@@ -20,7 +20,7 @@ public class Pistol : Weapon
         bulletInstance.Init(finalDamage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
         
-        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
+        AudioSource.PlayClipAtPoint(sound, transform.position);
         
         float delay = doubleBullet ? 0.1f : 0f;
 
@@ -41,6 +41,6 @@ public class Pistol : Weapon
         bulletInstance.Init(finalDamage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity);
         
-        AudioSource.PlayClipAtPoint(pistolSound, transform.position);
+        AudioSource.PlayClipAtPoint(sound, transform.position);
     }
 }
