@@ -108,7 +108,7 @@ MonoBehaviour:
   sound: {fileID: 8300000, guid: 8a2db94c32e4250459816d05ca617a2f, type: 3}
   damage: 2
   shootVelocity: 40
-  cooldown: 0.5
+  cooldown: 0.6
 --- !u!1 &6202089455865643035
 GameObject:
   m_ObjectHideFlags: 0

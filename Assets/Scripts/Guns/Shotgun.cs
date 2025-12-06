@@ -12,39 +12,24 @@ public class Shotgun : Weapon
     public override void shoot(Quaternion bulletRotation, float damagePorcentange, float critChance,
         float facingDirection, bool doubleBullet)
     {
-        GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
+        Vector3 position;
+        for (int i = 0; i < 3; i++)
+        {
+            position = firePoint.position;
+            position.y += 0.2f - (0.2f * i);
+            
+            GameObject bulletObject = Instantiate(bulletPrefab, position, bulletRotation);
+            Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
 
-        float finalDamage = damage * damagePorcentange;
-        
-        bulletInstance.Init(finalDamage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        Destroy(bulletInstance, 0.02f);
-        
-        AudioSource.PlayClipAtPoint(sound, transform.position);
-        
-        float delay = doubleBullet ? 0.1f : 0f;
+            float finalDamage = damage * damagePorcentange;
 
-        if (delay == 0) return;
-        
-        StartCoroutine(ShootWithDelay(delay, finalDamage, bulletRotation, critChance,
-            facingDirection));
+            bulletInstance.Init(finalDamage, critChance);
+            bulletInstance.Shoot(facingDirection, shootVelocity, 5f - (5f * i));
+
+            AudioSource.PlayClipAtPoint(sound, transform.position);
+
+            Destroy(bulletInstance.gameObject, 0.1f);
+        }
     }
     
-    IEnumerator ShootWithDelay(float delay, float finalDamage, Quaternion bulletRotation, float critChance,
-        float facingDirection)
-    {
-        yield return new WaitForSeconds(delay);
-
-        GameObject bulletObject = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
-        
-        bulletInstance.Init(finalDamage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
-        
-        Destroy(bulletInstance, 0.02f);
-        
-        AudioSource.PlayClipAtPoint(sound, transform.position);
-    }
 }

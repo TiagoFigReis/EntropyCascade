@@ -18,7 +18,7 @@ public class Pistol : Weapon
         float finalDamage = damage * damagePorcentange;
         
         bulletInstance.Init(finalDamage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
+        bulletInstance.Shoot(facingDirection, shootVelocity, 0f);
         
         AudioSource.PlayClipAtPoint(sound, transform.position);
         
@@ -39,7 +39,7 @@ public class Pistol : Weapon
         Bullet bulletInstance = bulletObject.GetComponent<Bullet>();
         
         bulletInstance.Init(finalDamage, critChance);
-        bulletInstance.Shoot(facingDirection, shootVelocity);
+        bulletInstance.Shoot(facingDirection, shootVelocity, 0f);
         
         AudioSource.PlayClipAtPoint(sound, transform.position);
     }

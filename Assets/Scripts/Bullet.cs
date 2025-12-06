@@ -17,12 +17,12 @@ public class Bullet : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Shoot(float direction, float velocity)
+    public void Shoot(float direction, float velocity, float yVelocity)
     {
-        rb.linearVelocity = new Vector2(direction * velocity, 0);
+        rb.linearVelocity = new Vector2(direction * velocity, yVelocity);
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
+    
+    private void OnCollisionEnter2D(Collision2D  other)
     {
         if (other.gameObject.CompareTag("Coin")) return;
         
