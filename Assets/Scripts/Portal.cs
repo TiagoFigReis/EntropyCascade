@@ -37,12 +37,11 @@ public class Portal : MonoBehaviour
         int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 60f);
         float spawnRateMultiplier = Mathf.Pow(0.9f, intervals);
 
-        float minCooldown = 6f * spawnRateMultiplier;
-        float maxCooldown = 12f * spawnRateMultiplier;
+        float minCooldown = 8f * spawnRateMultiplier;
+        float maxCooldown = 15f * spawnRateMultiplier;
         cooldown = Random.Range(minCooldown, maxCooldown);
         
         int monster = Random.Range(0, monsters.Count);
-        print(monster);
         
         GameObject monsterInstance = Instantiate(monsters[monster], transform.position, Quaternion.identity);
         if (monster == 0)

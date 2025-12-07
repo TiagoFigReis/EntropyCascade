@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 enum UpgradeType
 {
@@ -16,7 +17,6 @@ enum UpgradeType
     LifePoint,
     DoubleBullet
 }
-
 
 public class Player : MonoBehaviour
 {
@@ -40,14 +40,15 @@ public class Player : MonoBehaviour
 
     private int flashCount = 5, life = 3, coinCounter, coinUpgradeCount = 5, index;
     private bool canDoubleJump, doubleBullet = false, doubleJumpUpgraded = false, isShooting;
+    private bool isDead = false;
 
-    public static int enemieCounter = 0;
+    public static int enemieCounter;
     
     private List<UpgradeType> used = new List<UpgradeType>();
     
     [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY;
     
-    [SerializeField] private GameObject bulletPrefab, PauseCanvas; 
+    [SerializeField] private GameObject bulletPrefab, PauseCanvas, pauseButtonUI; 
     [SerializeField] private Transform healthBar, WeaponPosition; 
     private SpriteRenderer gunSprite;
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -71,7 +72,17 @@ public class Player : MonoBehaviour
         canvas = FindFirstObjectByType<Canvas>().transform;
         gameOver = FindFirstObjectByType<GameOver>();
         boxCollider = GetComponent<BoxCollider2D>();
+
+        enemieCounter = 0;
         
+        GamePaused = false; 
+        isShooting = false;
+        isDead = false;
+        Time.timeScale = 1f;
+        lastShot = Time.time;
+        
+        if (pauseButtonUI != null) pauseButtonUI.SetActive(true);
+
         audioSource = GetComponent<AudioSource>();
         
         audioSource.volume = 0.015f;
@@ -109,9 +120,23 @@ public class Player : MonoBehaviour
 
     void OnPause()
     {
-        Time.timeScale = 0f;
-        GamePaused = true;
-        PauseCanvas.SetActive(true);
+        if (isDead) return;
+        
+        Cursor.visible = true;
+
+        if (GamePaused)
+        {
+            Time.timeScale = 1f;
+            GamePaused = false;
+            PauseCanvas.SetActive(false);
+        }
+        else
+        {
+            isShooting = false;
+            Time.timeScale = 0f;
+            GamePaused = true;
+            PauseCanvas.SetActive(true);
+        }
     }
 
     void Flip()
@@ -156,7 +181,13 @@ public class Player : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
-        if (GamePaused) return;
+        if (GamePaused || isDead) return;
+        
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            isShooting = false;
+            return;
+        }
         
         if (value.isPressed)
         {
@@ -169,8 +200,7 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
-        
-        if (lastShot + gun.cooldown * cooldown > Time.time || !isShooting || GamePaused) return;
+        if (lastShot + gun.cooldown * cooldown > Time.time || !isShooting) return;
         
         lastShot = Time.time;
         
@@ -201,9 +231,20 @@ public class Player : MonoBehaviour
 
         if (life <= 0)
         {
-            gameOver.GameOverMenu(coinCounter, enemieCounter);
-            enemieCounter = 0;
+            anim.SetTrigger("IsDead");
+            GamePaused = true;
+            StartCoroutine(PlayerDeath());
         }
+    }
+
+    private IEnumerator PlayerDeath()
+    {
+        isDead = true;
+        if (pauseButtonUI != null) pauseButtonUI.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(1f);
+        
+        gameOver.GameOverMenu(coinCounter, enemieCounter);
     }
     
     private IEnumerator FlashSprite()
@@ -222,6 +263,8 @@ public class Player : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (isDead) return;
+        
         if (boxCollider.IsTouchingLayers(LayerMask.GetMask("Acid")))
         {
             StartCoroutine(WaterDeath());
@@ -252,8 +295,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D other)
     {
-        print("uaua");
-        if (lastHit + invulnerableTime > Time.time) return;
+        if (lastHit + invulnerableTime > Time.time || isDead) return;
 
         if (other.gameObject.CompareTag("Fox") || other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Monster2") || other.gameObject.CompareTag("Saw"))
         {
@@ -263,9 +305,11 @@ public class Player : MonoBehaviour
     
     private IEnumerator WaterDeath()
     {
+        isDead = true;
+        if (pauseButtonUI != null) pauseButtonUI.SetActive(false);
+        
         yield return new WaitForSeconds(0.2f); 
         gameOver.GameOverMenu(coinCounter, enemieCounter);
-        enemieCounter = 0;
     }
 
     private void HealthBarTime()
@@ -299,16 +343,16 @@ public class Player : MonoBehaviour
                 upgrade = "Double Jump";
                 break;
             case UpgradeType.Damage:
-                damage *= 1.25f;
-                upgrade = "+25% dmg";
+                damage *= 1.3f;
+                upgrade = "+30% dmg";
                 break;
             case UpgradeType.Speed:
-                velocityX *= 1.05f;
-                upgrade = "+5% Speed";
+                velocityX *= 1.1f;
+                upgrade = "+10% Speed";
                 break;
             case UpgradeType.BulletSpeed:
-                cooldown *= 0.9f;
-                upgrade = "+10% Fire Rate";
+                cooldown *= 0.8f;
+                upgrade = "+20% Fire Rate";
                 break;
             case UpgradeType.CritChance:
                 critChance += 0.1f;
@@ -321,7 +365,7 @@ public class Player : MonoBehaviour
             case UpgradeType.DoubleBullet:
                 used.Add(UpgradeType.DoubleBullet);
                 doubleBullet = true;
-                upgrade = "Double Bullet";
+                upgrade = "Pistol Double Bullet";
                 break;
         }   
         

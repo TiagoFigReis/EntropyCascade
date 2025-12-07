@@ -9,7 +9,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected float damage, shootVelocity;
     public float cooldown;
 
-    private void Start()
+    private void Awake() 
     {
         firePoint = transform.Find("Shoot");
     }

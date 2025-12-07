@@ -15,6 +15,7 @@ public class MainUIController : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadSceneAsync("Scenes/GameScene");
+        Cursor.visible = false;
     }
     
     public void QuitGame()

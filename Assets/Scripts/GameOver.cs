@@ -7,9 +7,12 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] private GameObject GameOverCanvas, firstSelectedButton;
     [SerializeField] private TextMeshProUGUI ScoreText, EnemiesText;
+
     public void GameOverMenu(float score, float enemies)
     {
         GameOverCanvas.SetActive(true);
+        
+        Cursor.visible = true;
         
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstSelectedButton);
@@ -28,6 +31,7 @@ public class GameOver : MonoBehaviour
         SceneManager.LoadScene("Scenes/GameScene");
         Time.timeScale = 1f;
         Player.GamePaused = false;
+        Cursor.visible = false;
     }
     
     public void QuitGame()

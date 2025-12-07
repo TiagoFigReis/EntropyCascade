@@ -70,7 +70,7 @@ public class Monster2 : MonoBehaviour
         {
             anim.SetBool("isDead", true);
             gameObject.layer = LayerMask.NameToLayer("FoxDeath");
-            AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
+            AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.3f);
             Destroy(gameObject,1.1f);
             Player.enemieCounter++;
             isDead = true;
@@ -126,7 +126,7 @@ public class Monster2 : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         anim.SetBool("isDead", true);
         rb.bodyType = RigidbodyType2D.Static;
-        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
+        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.3f);
         Destroy(gameObject,1.1f);
         Player.enemieCounter++;
         isDead = true;

@@ -282,8 +282,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster2
   attackCollider: {fileID: 7867378529781613510}
-  life: 5
-  speed: 0.6
+  life: 6
+  speed: 0.8
   damageTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
   deathSound: {fileID: 8300000, guid: b5d8fe19a9b3d4143986cdfd82c03c7f, type: 3}
 --- !u!1 &8710567050671162334

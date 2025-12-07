@@ -61,8 +61,6 @@ public class Monster : MonoBehaviour
         
         bool isCritical = Random.value < critChance;
         
-        print(dmg);
-        
         float finalDamage = isCritical ? dmg * 2 : dmg;
         
         life -=  finalDamage;
