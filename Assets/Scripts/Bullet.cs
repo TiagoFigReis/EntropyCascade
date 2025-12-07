@@ -40,6 +40,13 @@ public class Bullet : MonoBehaviour
             if (monster.life <= 0) return;
         }
         
+        if (other.gameObject.CompareTag("Monster2"))
+        {
+            Monster2 monster = other.gameObject.GetComponent<Monster2>();
+            
+            if (monster.life <= 0) return;
+        }
+        
         Destroy(gameObject);
     }
 

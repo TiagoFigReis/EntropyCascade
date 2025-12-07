@@ -12,6 +12,7 @@ TagManager:
   - Water
   - Fox
   - FoxDeath
+  - Monster2
   layers:
   - Default
   - TransparentFX

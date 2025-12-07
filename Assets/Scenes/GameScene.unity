@@ -690,6 +690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOver
   GameOverCanvas: {fileID: 1196341552}
+  firstSelectedButton: {fileID: 1262855651}
   ScoreText: {fileID: 395006694}
   EnemiesText: {fileID: 1708297411}
 --- !u!4 &483897053
@@ -3016,7 +3017,7 @@ Transform:
   m_GameObject: {fileID: 559889020}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.27, z: 0}
+  m_LocalPosition: {x: -0.04, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3057,7 +3058,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -20001,7 +20002,7 @@ GameObject:
   - component: {fileID: 561304854}
   m_Layer: 16
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22576,6 +22577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
   PauseCanvas: {fileID: 1035285925}
+  firstSelectedButton: {fileID: 1561937795}
 --- !u!4 &1331238106
 Transform:
   m_ObjectHideFlags: 0
@@ -23099,6 +23101,7 @@ MonoBehaviour:
   monsters:
   - {fileID: 7253322095127250567, guid: e1356cdcf03da2149bc8f2c1f54b9143, type: 3}
   - {fileID: 7253322095127250567, guid: 528f29719bb802b46bde4fdd0258c5af, type: 3}
+  - {fileID: 7253322095127250567, guid: dfeaff119d63903469e1bba6b2796f52, type: 3}
 --- !u!1 &1612150903
 GameObject:
   m_ObjectHideFlags: 0
@@ -23290,6 +23293,7 @@ MonoBehaviour:
   monsters:
   - {fileID: 7253322095127250567, guid: e1356cdcf03da2149bc8f2c1f54b9143, type: 3}
   - {fileID: 7253322095127250567, guid: 528f29719bb802b46bde4fdd0258c5af, type: 3}
+  - {fileID: 7253322095127250567, guid: dfeaff119d63903469e1bba6b2796f52, type: 3}
 --- !u!1 &1664333953
 GameObject:
   m_ObjectHideFlags: 0

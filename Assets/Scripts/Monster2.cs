@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class Monster : MonoBehaviour
+public class Monster2 : MonoBehaviour
 {
     private BoxCollider2D boxCollider;
+    [SerializeField] private BoxCollider2D attackCollider;
     private Rigidbody2D rb;
     private Animator anim;
-    private float direction;
+    private float direction, cooldown, lastAttack;
     public float life = 3f;
-    private bool isDead = false;
+    private bool isDead = false, isAttacking;
 
     [SerializeField] private float speed;
     [SerializeField] private GameObject damageTextPrefab;
@@ -29,14 +32,18 @@ public class Monster : MonoBehaviour
     void Start()
     {
         canvas = FindFirstObjectByType<Canvas>().transform;
+        cooldown = 1.9f;
         
         int timePassed = Mathf.FloorToInt(Time.timeSinceLevelLoad / 30f);
+        transform.localScale = new Vector2(-transform.localScale.x * direction, transform.localScale.y);
         life *= Mathf.Pow(1.1f, timePassed);
     }
 
     void Update()
     {
-        if (isDead) return;
+        Attacking();
+        
+        if (isDead || isAttacking) return;
         
         int intervals = Mathf.FloorToInt(Time.timeSinceLevelLoad / 20f);
         float speedMultiplier = Mathf.Pow(1.025f, intervals);
@@ -45,23 +52,11 @@ public class Monster : MonoBehaviour
         rb.linearVelocity = new Vector2(currentSpeed * direction, rb.linearVelocity.y);
     }
 
-    private void LateUpdate()
-    {
-        float currentScaleX = transform.localScale.x;
-
-        if (direction > 0 && currentScaleX > 0)
-        {
-            transform.localScale = new Vector2(-currentScaleX, transform.localScale.y);
-        }
-    }
-
     void Damage(float dmg, float critChance)
     {
         if (isDead) return;
         
         bool isCritical = Random.value < critChance;
-        
-        print(dmg);
         
         float finalDamage = isCritical ? dmg * 2 : dmg;
         
@@ -73,25 +68,33 @@ public class Monster : MonoBehaviour
         
         if (life <= 0)
         {
-            anim.SetBool("IsDead", true);
-            rb.bodyType = RigidbodyType2D.Static;
-            gameObject.layer = LayerMask.NameToLayer("Explosion");
-            StartCoroutine(PlayDeathSoundDelayed(0.35f));
+            anim.SetBool("isDead", true);
+            gameObject.layer = LayerMask.NameToLayer("FoxDeath");
+            AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
             Destroy(gameObject,1.1f);
             Player.enemieCounter++;
             isDead = true;
         }
     }
-    
-    private IEnumerator PlayDeathSoundDelayed(float delay)
+
+    void Attacking()
     {
-        yield return new WaitForSeconds(delay);
-        AudioSource.PlayClipAtPoint(deathSound, transform.position);
+        if (lastAttack + cooldown > Time.timeSinceLevelLoad) return;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        isAttacking = false;
+        attackCollider.enabled = false;
     }
 
     void Flip()
     {
-        direction *= -1;
+        direction *= -1; 
+        if (transform.localScale.x > 0)
+        {
+            transform.localScale = new Vector2(-Math.Abs(transform.localScale.x), transform.localScale.y);
+            return;
+        }
+
+        transform.localScale = new Vector2(Math.Abs(transform.localScale.x), transform.localScale.y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -99,16 +102,31 @@ public class Monster : MonoBehaviour
         if (boxCollider.IsTouchingLayers(LayerMask.GetMask("Acid")))
         {
             StartCoroutine(acidDeath());
-            return;
+        }
+
+        if (other.CompareTag("Player"))
+        {
+            anim.SetTrigger("isAttacking");
+            lastAttack = Time.timeSinceLevelLoad;
+            isAttacking = true;
+            rb.bodyType = RigidbodyType2D.Static;
+            StartCoroutine(AttackWait());
         }
     }
+    
+    private IEnumerator AttackWait()
+    {
+        yield return new WaitForSeconds(1.2f);
+        attackCollider.enabled = true;
+    }
+    
     
     private IEnumerator acidDeath()
     {
         yield return new WaitForSeconds(0.05f);
-        anim.SetBool("IsDead", true);
+        anim.SetBool("isDead", true);
         rb.bodyType = RigidbodyType2D.Static;
-        StartCoroutine(PlayDeathSoundDelayed(0.35f));
+        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
         Destroy(gameObject,1.1f);
         Player.enemieCounter++;
         isDead = true;
@@ -116,6 +134,7 @@ public class Monster : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        
         if (boxCollider.IsTouchingLayers(LayerMask.GetMask("Limit")))
         {
             Flip();

@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private Animator HealtAnim;
     private SpriteRenderer HealtSpriteRenderer;
     private BoxCollider2D boxCollider;
+    public static bool GamePaused;
 
     private float playerHorDir,
         facingDirection = 1f,
@@ -109,6 +110,7 @@ public class Player : MonoBehaviour
     void OnPause()
     {
         Time.timeScale = 0f;
+        GamePaused = true;
         PauseCanvas.SetActive(true);
     }
 
@@ -124,11 +126,15 @@ public class Player : MonoBehaviour
 
     void OnMove(InputValue value)
     {
+        if (GamePaused) return;
+        
         playerHorDir = value.Get<Vector2>().x;
     }
 
     void OnJump(InputValue value)
     {
+        if (GamePaused) return;
+        
         bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground")) || groundCheck.IsTouchingLayers(LayerMask.GetMask("Monster"));
 
         audioSource.volume = 0.015f;
@@ -150,6 +156,8 @@ public class Player : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
+        if (GamePaused) return;
+        
         if (value.isPressed)
         {
             isShooting = true;
@@ -161,7 +169,8 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
-        if (lastShot + gun.cooldown * cooldown > Time.time || !isShooting) return;
+        
+        if (lastShot + gun.cooldown * cooldown > Time.time || !isShooting || GamePaused) return;
         
         lastShot = Time.time;
         
@@ -243,9 +252,10 @@ public class Player : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D other)
     {
+        print("uaua");
         if (lastHit + invulnerableTime > Time.time) return;
 
-        if (other.gameObject.CompareTag("Fox") || other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw"))
+        if (other.gameObject.CompareTag("Fox") || other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Monster2") || other.gameObject.CompareTag("Saw"))
         {
             Damage();
         }

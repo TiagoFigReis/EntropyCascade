@@ -50,10 +50,19 @@ public class Portal : MonoBehaviour
             Monster monsterInstanceGj = monsterInstance.GetComponent<Monster>();
             monsterInstanceGj.Init(direction);
             return;
+        } 
+        
+        if (monster == 1)
+        {
+            Fox FoxInstance = monsterInstance.GetComponent<Fox>();
+            FoxInstance.Init(direction);
+            return;
         }
         
-        Fox FoxInstance = monsterInstance.GetComponent<Fox>();
-        FoxInstance.Init(direction);
+        Monster2 Monster2Instance = monsterInstance.GetComponent<Monster2>();
+        Monster2Instance.Init(direction);
+        
         
     }
-}
+        
+    }

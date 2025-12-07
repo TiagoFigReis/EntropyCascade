@@ -922,6 +922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c4dd979c5cd1e4d89804bd111429d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainUIController
+  firstSelectedButton: {fileID: 1435677013}
 --- !u!4 &1378359928
 Transform:
   m_ObjectHideFlags: 0
