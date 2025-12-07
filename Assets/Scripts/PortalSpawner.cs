@@ -16,12 +16,12 @@ public class PortalSpawner : MonoBehaviour
 
     void spawnPortal()
     {
-        if (lastSpawned + portalTimer > Time.time || portalSpawnList.Count <= portalCount)
+        if (lastSpawned + portalTimer > Time.timeSinceLevelLoad || portalSpawnList.Count <= portalCount)
         {
             return;
         }
         
-        lastSpawned = Time.time;
+        lastSpawned = Time.timeSinceLevelLoad;
         Vector3 position = portalSpawnList[portalCount].transform.position;
         GameObject newPortal = Instantiate(portalPrefab.gameObject, position, Quaternion.identity);
         Portal portalInstance = newPortal.GetComponent<Portal>();
