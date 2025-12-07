@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Fox : MonoBehaviour
 {
@@ -31,6 +33,7 @@ public class Fox : MonoBehaviour
         canvas = FindFirstObjectByType<Canvas>().transform;
         
         int timePassed = Mathf.FloorToInt(Time.timeSinceLevelLoad / 30f);
+        transform.localScale = new Vector2(-transform.localScale.x * direction, transform.localScale.y);
         life *= Mathf.Pow(1.1f, timePassed);
     }
 
@@ -42,19 +45,7 @@ public class Fox : MonoBehaviour
         float speedMultiplier = Mathf.Pow(1.025f, intervals);
         float currentSpeed = speed * speedMultiplier;
         
-        
-
         rb.linearVelocity = new Vector2(currentSpeed * direction, rb.linearVelocity.y);
-    }
-
-    private void LateUpdate()
-    {
-        float currentScaleX = transform.localScale.x;
-
-        if (direction > 0 && currentScaleX > 0)
-        {
-            transform.localScale = new Vector2(-currentScaleX, transform.localScale.y);
-        }
     }
 
     void Damage(float dmg, float critChance)
@@ -75,23 +66,23 @@ public class Fox : MonoBehaviour
         {
             anim.SetBool("isDead", true);
             gameObject.layer = LayerMask.NameToLayer("FoxDeath");
-            StartCoroutine(PlayDeathSoundDelayed(0.35f));
+            AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
             Destroy(gameObject,1.1f);
             Player.enemieCounter++;
             isDead = true;
         }
     }
-    
-    private IEnumerator PlayDeathSoundDelayed(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        AudioSource.PlayClipAtPoint(deathSound, transform.position);
-    }
 
     void Flip()
     {
-        print("Vou flipar ein");
-        direction *= -1;
+        direction *= -1; 
+        if (transform.localScale.x > 0)
+        {
+            transform.localScale = new Vector2(-Math.Abs(transform.localScale.x), transform.localScale.y);
+            return;
+        }
+
+        transform.localScale = new Vector2(Math.Abs(transform.localScale.x), transform.localScale.y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -108,7 +99,7 @@ public class Fox : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         anim.SetBool("isDead", true);
         rb.bodyType = RigidbodyType2D.Static;
-        StartCoroutine(PlayDeathSoundDelayed(0.35f));
+        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.1f);
         Destroy(gameObject,1.1f);
         Player.enemieCounter++;
         isDead = true;

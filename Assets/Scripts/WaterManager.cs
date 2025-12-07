@@ -23,7 +23,7 @@ public class WaterManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.gameObject.CompareTag("Monster")) return;
+        if (!other.gameObject.CompareTag("Monster") && !other.gameObject.CompareTag("Fox")) return;
 
         curY += 0.2f;
     }

@@ -26,7 +26,7 @@ public class Shotgun : Weapon
             bulletInstance.Init(finalDamage, critChance);
             bulletInstance.Shoot(facingDirection, shootVelocity, 5f - (5f * i));
 
-            AudioSource.PlayClipAtPoint(sound, transform.position);
+            AudioSource.PlayClipAtPoint(sound, transform.position, 0.08f);
 
             Destroy(bulletInstance.gameObject, 0.1f);
         }

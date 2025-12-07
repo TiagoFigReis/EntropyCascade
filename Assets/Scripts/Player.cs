@@ -53,12 +53,12 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject upgradeTextPrefab;
     [SerializeField] private BoxCollider2D groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private AudioClip pistolSound, jumpSound;
+    [SerializeField] private AudioClip pistolSound, jumpSound, upgradeSound, coinSound;
     [SerializeField] private List<Weapon> gunList;
     
     private Weapon gun;
     
-    private AudioSource audioSource;
+    private AudioSource audioSource, audioSourceCoin;
     private Transform canvas;
     private GameOver gameOver;
     
@@ -125,17 +125,19 @@ public class Player : MonoBehaviour
     {
         bool isGrounded = groundCheck.IsTouchingLayers(LayerMask.GetMask("Foreground")) || groundCheck.IsTouchingLayers(LayerMask.GetMask("Monster"));
 
+        audioSource.volume = 0.015f;
+        
         if (value.isPressed && isGrounded)
         {
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, velocityY); 
-            audioSource.Play();
+            audioSource.PlayOneShot(jumpSound);
             canDoubleJump = true;
         } 
         else if (value.isPressed && canDoubleJump && doubleJumpUpgraded) 
         {
             anim.SetTrigger("JumpTrigger");
+            audioSource.PlayOneShot(jumpSound);
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, doubleJumpVelocityY);
-            audioSource.Play();
             canDoubleJump = false;
         }
     }
@@ -212,6 +214,7 @@ public class Player : MonoBehaviour
         }
         
         if (!other.gameObject.CompareTag("Coin")) return;
+        Destroy(other.gameObject);
 
         CoinSpawner spawner = FindFirstObjectByType<CoinSpawner>();
 
@@ -220,16 +223,23 @@ public class Player : MonoBehaviour
         
         spawner.Notify();
 
-        if (coinCounter % coinUpgradeCount == 0) Upgrade();
-
-        Destroy(other.gameObject);
+        if (coinCounter % coinUpgradeCount == 0)
+        {
+            Upgrade();
+            audioSource.volume = 0.1f;
+            audioSource.PlayOneShot(upgradeSound);
+            return;
+        }
+        
+        audioSource.volume = 0.015f;
+        audioSource.PlayOneShot(coinSound);
     }
 
     private void OnCollisionStay2D(Collision2D other)
     {
         if (lastHit + invulnerableTime > Time.time) return;
 
-        if (other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw"))
+        if (other.gameObject.CompareTag("Fox") || other.gameObject.CompareTag("Monster") || other.gameObject.CompareTag("Saw"))
         {
             Damage();
         }

@@ -42,8 +42,6 @@ public class Monster : MonoBehaviour
         float speedMultiplier = Mathf.Pow(1.025f, intervals);
         float currentSpeed = speed * speedMultiplier;
         
-        
-
         rb.linearVelocity = new Vector2(currentSpeed * direction, rb.linearVelocity.y);
     }
 

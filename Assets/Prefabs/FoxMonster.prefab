@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 921205215535660418}
   m_Layer: 8
   m_Name: FoxMonster
-  m_TagString: Monster
+  m_TagString: Fox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,7 +150,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.04531882, y: -0.07825176}
+  m_Offset: {x: -0.04531882, y: -0.05883552}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -160,7 +160,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.21351145, y: 0.17782842}
+  m_Size: {x: 0.21351145, y: 0.21666089}
   m_EdgeRadius: 0
 --- !u!50 &-1843395366856721798
 Rigidbody2D:
@@ -204,4 +204,4 @@ MonoBehaviour:
   life: 2
   speed: 2.5
   damageTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
-  deathSound: {fileID: 8300000, guid: 7f9552cd22d681449a066a89a4b953c6, type: 3}
+  deathSound: {fileID: 8300000, guid: d07b05e4c9d1cbf499846978a0951569, type: 3}

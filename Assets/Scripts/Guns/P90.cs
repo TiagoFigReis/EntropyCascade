@@ -14,6 +14,6 @@ public class P90 : Weapon
         bulletInstance.Init(finalDamage, critChance);
         bulletInstance.Shoot(facingDirection, shootVelocity, 0f);
         
-        AudioSource.PlayClipAtPoint(sound, transform.position);
+        AudioSource.PlayClipAtPoint(sound, transform.position, 0.30f);
     }
 }

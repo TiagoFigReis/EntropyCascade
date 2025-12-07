@@ -19975,6 +19975,8 @@ MonoBehaviour:
     m_Bits: 64
   pistolSound: {fileID: 8300000, guid: 8a2db94c32e4250459816d05ca617a2f, type: 3}
   jumpSound: {fileID: 8300000, guid: 2cae1ca3092e4a94fb2b2f5df3015ea5, type: 3}
+  upgradeSound: {fileID: 8300000, guid: 06e51177124a4574cb8fc52e7c19a4f5, type: 3}
+  coinSound: {fileID: 8300000, guid: dc8ae71d797f3d74fa90d6cb7519bf6f, type: 3}
   gunList:
   - {fileID: 8075398267582266133, guid: 5203c0eb42ff6a54e82685520dbf7d6a, type: 3}
   - {fileID: 1851645523272591027, guid: 70154fce276ad4449bfdda7e69de6fc4, type: 3}
@@ -27651,7 +27653,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1990119003}
   - component: {fileID: 1990119004}
-  m_Layer: 16
+  m_Layer: 10
   m_Name: JumpDetector
   m_TagString: JumpCollider
   m_Icon: {fileID: 0}
