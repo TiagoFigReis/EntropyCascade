@@ -46,9 +46,9 @@ public class Player : MonoBehaviour
     
     [SerializeField] private float velocityX, cooldown, velocityY, doubleJumpVelocityY;
     
-    [SerializeField] private GameObject bulletPrefab; 
-    [SerializeField] private Transform firePoint, healthBar, WeaponPosition; 
-    [SerializeField] private SpriteRenderer gunSprite;
+    [SerializeField] private GameObject bulletPrefab, PauseCanvas; 
+    [SerializeField] private Transform healthBar, WeaponPosition; 
+    private SpriteRenderer gunSprite;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject upgradeTextPrefab;
     [SerializeField] private BoxCollider2D groundCheck;
@@ -104,6 +104,12 @@ public class Player : MonoBehaviour
         
         anim.SetBool("IsRunning", playerHorDir != 0 && isGrounded);
         anim.SetBool("IsJumping", !isGrounded);
+    }
+
+    void OnPause()
+    {
+        Time.timeScale = 0f;
+        PauseCanvas.SetActive(true);
     }
 
     void Flip()

@@ -202,6 +202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fox
   life: 2
-  speed: 2.5
+  speed: 2
   damageTextPrefab: {fileID: 5290316470550261435, guid: 985ce006d1ba3314fb9b5fbd29655cdc, type: 3}
   deathSound: {fileID: 8300000, guid: d07b05e4c9d1cbf499846978a0951569, type: 3}
